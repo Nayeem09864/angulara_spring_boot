@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Table</title>
+  <!-- Bootstrap CSS -->
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  -->
+  <!-- Custom CSS -->
+  <style>
+    /* Add your custom CSS styles here */
+    .book-table {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .book-table th {
+      text-align: center;
+    }
+
+    .book-table td {
+      text-align: center;
+    }
+
+    .submit-btn {
+      padding: 5px 10px;
+      margin: 2px;
+    }
+
+    .container {
+      margin-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Book Table</h1>
+  <div class="container">
+    <button class="btn btn-primary" (click)="addBookClick()">Add Book</button>
+  </div>
+  <table class="table book-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Author</th>
+      <!--<th>Book Type</th>-->
+      <th>Update</th>
+      <th>Delete</th>
+      <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let book of books">
+      <td>{{book!.id}}</td>
+      <td>{{book!.title}}</td>
+      <td>{{book!.author}}</td>
+      <!--<td>{{book.booktype}}</td>-->
+      <td>
+        <button class="btn btn-primary submit-btn" (click)="updateBook2(book.id!)">Update</button>
+      </td>
+      <td>
+        <button class="btn btn-danger submit-btn" (click)="deleteBook2(book.id!)">Delete</button>
+      </td>
+      <td>
+        <button class="btn btn-success submit-btn" (click)="viewBook(book.id!)">View</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Bootstrap JS
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+-->
+
+</body>
+
+</html>
