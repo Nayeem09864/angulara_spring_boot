@@ -4,13 +4,14 @@ import com.example.crudapplication3.entity.Book;
 import com.example.crudapplication3.entity.BookType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-
+@DataJpaTest
 class BookRepositoryTest {
 
-    //@Autowired
+    @Autowired
     private BookRepository underTest;
 
     @Test
@@ -20,10 +21,10 @@ class BookRepositoryTest {
         Book book= new Book(id,"After Typo 4","Author Typo 4", BookType.FREE);
         underTest.save(book);
         //when
-        Book expected= underTest.findBookByTitle(book.getTitle());
+        Book expected= underTest.findBookByTitle("After Typo 4");
         //then
         boolean flag=true;
-        //assertThat(expected,book);
+        //assertThat(expected).isTrue();
 
     }
 
