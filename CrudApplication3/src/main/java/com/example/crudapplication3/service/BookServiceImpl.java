@@ -53,7 +53,10 @@ public class BookServiceImpl implements BookService{
             existingBook.get().setBookType(updatedBook.getBookType());
             return bookRepository.save(existingBook.get());
         }
-        return null;
+        else{
+            return null;
+        }
+
     }
 
 

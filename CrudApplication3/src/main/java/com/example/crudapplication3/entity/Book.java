@@ -34,6 +34,12 @@ public class Book {
         this.author = author;
         this.bookType=bookType;
     }
+    public Book(Long id,String title, String author,BookType bookType) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.bookType=bookType;
+    }
 
     public Book() {
 
