@@ -54,6 +54,7 @@ public class BookServiceImpl implements BookService{
             return bookRepository.save(existingBook.get());
         }
         else{
+            System.out.println("The book is not exists");
             return null;
         }
 
@@ -70,9 +71,11 @@ public class BookServiceImpl implements BookService{
 //        return bookList[0];
         Book book=bookRepository.findBookByTitle(title);
         if(book!=null) {
-            return bookRepository.findBookByTitle(title);
+            //return bookRepository.findBookByTitle(title);
+            return book;
         }
         else {
+            System.out.println("Book with this title is not found");
             return null;
         }
 

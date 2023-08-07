@@ -42,7 +42,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    @Disabled
+    //@Disabled
     void testGetBookById() {
         bookServiceUnderTest.getBookById(1L);
         verify(bookRepository).findById(1L);
@@ -103,6 +103,27 @@ class BookServiceImplTest {
         assertEquals(existingBook, result);
     }
     @Test
+    public void testUpdateBook_BookNotFound() {
+        // Arrange
+        Long nonExistentBookId = 123456L;
+        Book updatedBook = new Book();
+        updatedBook.setTitle("Updated Title");
+        updatedBook.setAuthor("Updated Author");
+        updatedBook.setBookType(BookType.PREMIUM);
+
+        when(bookRepository.findById(nonExistentBookId)).thenReturn(Optional.empty());
+
+        // Act
+        Book result = bookServiceUnderTest.updateBook(nonExistentBookId, updatedBook);
+
+        // Assert
+        verify(bookRepository, times(1)).findById(nonExistentBookId);
+        verify(bookRepository, never()).save(any(Book.class)); // Ensure save is not called
+
+        assertNull(result);
+    }
+
+    @Test
     //@Disabled
     void deleteBook() {
         Book book= new Book(1L,"Title Test","Author test", BookType.FREE);
@@ -112,24 +133,91 @@ class BookServiceImplTest {
     }
 
     @Test
-    @Disabled
+    //@Disabled
     void getBookByTitle() {
-        Book book= new Book(1L,"Title Test","Author test", BookType.FREE);
-        bookServiceUnderTest.addBook(book);
-        bookServiceUnderTest.getBookByTitle("Title Test");
-        verify(bookRepository).findBookByTitle("Title Test");
+        // Arrange
+        String title = "Existing Title";
+        Book expectedBook = new Book();
+        expectedBook.setId(1L);
+        expectedBook.setTitle(title);
+        expectedBook.setAuthor("Sample Author");
+        expectedBook.setBookType(BookType.FREE);
+
+        when(bookRepository.findBookByTitle(title)).thenReturn(expectedBook);
+        //when(bookRepository.save(expectedBook)).thenReturn(expectedBook);
+        // Act
+        Book result = bookServiceUnderTest.getBookByTitle(title);
+
+        // Assert
+        verify(bookRepository, times(1)).findBookByTitle(title);
+        assertEquals(expectedBook, result);
     }
 
     @Test
-    @Disabled
+    public void testGetBookByTitle_NotFound() {
+        // Arrange
+        String title = "Nonexistent Title";
+
+        when(bookRepository.findBookByTitle(title)).thenReturn(null);
+
+        // Act
+        Book result = bookServiceUnderTest.getBookByTitle(title);
+
+        // Assert
+        verify(bookRepository, times(1)).findBookByTitle(title);
+        assertNull(result);
+    }
+
+    @Test
+    //@Disabled
     void addBookByCheckingTitle() {
-        Book book= new Book(1L,"Title Test","Author test", BookType.FREE);
-        bookServiceUnderTest.addBookByCheckingTitle(book);
-        verify(bookRepository).addBookByCheckingTitle("Title Test");
+//        Book book= new Book(1L,"Title Test","Author test", BookType.FREE);
+//        bookServiceUnderTest.addBookByCheckingTitle(book);
+//        verify(bookRepository).addBookByCheckingTitle("Title Test");
+
+        String newTitle = "New Title";
+        Book bookToAdd = new Book();
+        bookToAdd.setTitle(newTitle);
+        bookToAdd.setAuthor("Author");
+        bookToAdd.setBookType(BookType.FREE);
+
+        when(bookRepository.addBookByCheckingTitle(newTitle)).thenReturn(null);
+        when(bookRepository.save(bookToAdd)).thenReturn(bookToAdd);
+
+        // Act
+        Book result = bookServiceUnderTest.addBookByCheckingTitle(bookToAdd);
+
+        // Assert
+        verify(bookRepository, times(1)).addBookByCheckingTitle(newTitle);
+        verify(bookRepository, times(1)).save(bookToAdd);
+
+        assertNotNull(result);
+        assertEquals(newTitle, result.getTitle());
     }
 
     @Test
-    @Disabled
+    public void testAddBookByCheckingTitle_TitleExists() {
+        // Arrange
+        String existingTitle = "Existing Title";
+        Book bookToAdd = new Book();
+        bookToAdd.setTitle(existingTitle);
+        bookToAdd.setAuthor("Author");
+        bookToAdd.setBookType(BookType.FREE);
+
+        when(bookRepository.addBookByCheckingTitle(existingTitle)).thenReturn(bookToAdd);
+
+        // Act
+        Book result = bookServiceUnderTest.addBookByCheckingTitle(bookToAdd);
+
+        // Assert
+        verify(bookRepository, times(1)).addBookByCheckingTitle(existingTitle);
+        verify(bookRepository, never()).save(any(Book.class)); // Ensure save is not called
+
+        assertNull(result);
+    }
+
+    @Test
+    //@Disabled
     void getBookByType() {
         Book book= new Book(1L,"Title Test","Author test", BookType.FREE);
         //BookType bookType=BookType.FREE;
