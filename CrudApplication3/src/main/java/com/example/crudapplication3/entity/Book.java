@@ -28,8 +28,8 @@ public class Book {
 
 
     // Getters, setters, and constructors (including no-args constructor)
-    public Book(Long id, String title, String author,BookType bookType) {
-        this.id = id;
+    public Book(String title, String author,BookType bookType) {
+        //this.id = id;
         this.title = title;
         this.author = author;
         this.bookType=bookType;
