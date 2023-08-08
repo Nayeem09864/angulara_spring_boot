@@ -8,12 +8,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -26,6 +26,8 @@ class BookServiceImplTest {
     //@Autowired
     @Mock
     private BookRepository bookRepository;
+
+    @InjectMocks
     private BookServiceImpl bookServiceUnderTest;
     //private AutoCloseable autoCloseable;
 
@@ -37,8 +39,17 @@ class BookServiceImplTest {
 
     @Test
     void testGetAllBooks() {
-        bookServiceUnderTest.getAllBooks();
-        verify(bookRepository).findAll();
+        Book book= new Book(1L,"Title Test","Author test", BookType.FREE);
+
+        List<Book> books=new ArrayList<>();
+        books.add(book);
+
+        Mockito.when(this.bookRepository.findAll()).thenReturn(books);
+
+      List<Book> actual=  this.bookServiceUnderTest.getAllBooks();
+      assertEquals(BookType.FREE,actual.get(0).getBookType());
+
+
     }
 
     @Test
@@ -79,6 +90,7 @@ class BookServiceImplTest {
         existingBook.setAuthor("Existing Author");
         existingBook.setBookType(BookType.FREE);
 
+
         Book updatedBook = new Book();
         updatedBook.setTitle("Updated Title");
         updatedBook.setAuthor("Updated Author");
@@ -86,7 +98,7 @@ class BookServiceImplTest {
 
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
         when(bookRepository.save(existingBook)).thenReturn(existingBook);
-
+        System.out.println(existingBook.getAuthor());
         // Act
         Book result = bookServiceUnderTest.updateBook(bookId, updatedBook);
 
@@ -100,6 +112,8 @@ class BookServiceImplTest {
 
         //verify(bookRepository,never()).save(updatedBook);
         assertNotNull(result);
+        System.out.println(existingBook.getAuthor());
+        System.out.println(result.getAuthor());
         assertEquals(existingBook, result);
     }
     @Test
